@@ -1,11 +1,55 @@
 ---
-import Welcome from '../components/Welcome.astro';
 import Layout from '../layouts/Layout.astro';
-
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+import { getCollection } from 'astro:content';
+const productos = await getCollection('productos');
+console.log(productos)
 ---
 
-<Layout>
-	<Welcome />
+<Layout title="DEXTER">
+	
+	<section aria-label="Ultimos productos">
+		<div class="p-4 mx-auto max-w-screen-xl">
+			<div class="grid gap-6 sm:grid-cols-3 xs:grid-cols-2">
+				{
+					productos.map(producto => {
+					const { slug, data } = producto	
+					const {marca, modelo, precio, imagen, buy} = data
+					return(
+						<div class="flex justify-center">
+							<div class="max-w-sm bg-white border rounded-lg">
+								<a href={`/productos/${slug}`}>
+									<img class="rounded-t-lg" src={`/${imagen}`} alt="" />
+								</a>
+								<div class="p-5">
+									<a href={`/productos/${marca}/${modelo}`}>
+										<h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900">{marca + ' ' + modelo}</h5>
+									</a>
+									<p class="text-xl text-gray-700">$ {precio.toLocaleString('es-AR')}<span class="text-gray-500 text-sm">ARS</span></p>
+									<a
+										href={buy.argentina}
+										class="inline-block w-full text-center mt-3 py-2 px-4 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700"
+									>
+										Comprar
+									</a>
+								</div>
+							</div>
+						</div>
+					)})
+				}
+			</div>
+		</div>
+	</section>
 </Layout>
+
+
+
+
+<style>
+	h1 {
+	margin: 2rem 0;
+	font-style: italic;
+	letter-spacing: 0.8rem;
+
+	}
+
+</style>

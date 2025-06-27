@@ -1,0 +1,47 @@
+---
+import { getCollection } from "astro:content";
+import Layout from "../../layouts/Layout.astro";
+
+export async function getStaticPaths() {
+  const productos = await getCollection("productos");
+
+  return productos.map((producto) => ({
+    params: { id: producto.slug },
+    props: { producto },
+  }));
+}
+import Gallery from '../../components/Gallery.jsx';
+
+import img1 from '../../../src/assets/air_force_negra.webp';
+import img2 from '../../../src/assets/air_zoom_negra.jpeg';
+import img3 from '../../../src/assets/air_max_negra.webp';
+
+const images = [img1.src, img2.src, img3.src];
+
+const {producto} = Astro.props
+const {data} =  producto
+const {marca, modelo, precio, imagen, buy} = data
+const title = marca + ' ' + modelo
+
+const {Content} = await producto.render()
+---
+<Layout title={title}>
+  <div class="bg-gray-100 flex justify-around items-center py-4">
+    <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-chevron-left"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M15 6l-6 6l6 6" /></svg>
+    <p class="text-center">¡Envios gratis a partir de $299.99<br><span class="text-sm underline text-center">Ver terminos y condiciones</span></p>
+
+    <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-chevron-right"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l6 6l-6 6" /></svg>
+  </div>
+    <div class="px-4 py-2">  
+
+    <h1 class="text-2xl font-semibold">{marca} {modelo}</h1>
+    <p class="text-gray-500">Zapatillas de Moda para hombre</p>
+    <p class="mt-4 text-lg font-bold">${precio.toLocaleString('es-AR')}</p>
+    <p class="mt-0 text-sm text-gray-500">Hasta 6x ${Math.ceil(precio / 6).toLocaleString('es-AR')}</p>
+    <p class="mt-0 text-sm text-gray-500">Precio sin impuestos nacionales: ${Math.floor(precio * .88).toLocaleString('es-AR')}</p>
+</div>
+  <Gallery client:load images={images} />
+
+
+
+</Layout>
